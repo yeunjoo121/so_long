@@ -1,5 +1,4 @@
 #include "so_long.h"
-#include "./gnl/get_next_line.h"
 
 static char	**ft_free(char **str)
 {

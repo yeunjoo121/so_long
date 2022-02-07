@@ -1,4 +1,3 @@
-#include "./gnl/get_next_line.h"
 #include "./so_long.h"
 #include <stdio.h>
 
@@ -108,5 +107,6 @@ int main(int argc, char **argv)
         }
     }
     is_valid_map(map, &m);
+    show_window(&m, map);
     return (0);
 }

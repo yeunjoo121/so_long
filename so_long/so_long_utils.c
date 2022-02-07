@@ -1,5 +1,4 @@
 #include "so_long.h"
-#include "./gnl/get_next_line.h"
 
 int             ft_strcmp(const char *s1, const char *s2)
 {

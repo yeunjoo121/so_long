@@ -1,5 +1,4 @@
 #include "./so_long.h"
-#include "./gnl/get_next_line.h"
 
 int is_valid_char(char c)
 {
