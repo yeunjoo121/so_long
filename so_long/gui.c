@@ -32,136 +32,66 @@ void print_tile(struct map_arg *m, char **map, struct draw_arg draw, int imginde
     }
 }
 
-void print_tile_move(struct key_arg *key_param)
+void draw_prev(struct key_arg *key_param)
 {
-    //플레이어가 있던 곳 검은색으로 덮기, exit인데 다 못모았으면 검은색으로 덮지 x
-    //이전 곳이 exit인데 다 못모았으면 이전 것 검은색으로 덮지 x
-    //플레이어가 온 곳 플레이어로 덮기
-    if (key_param->current_i > key_param->prev_i)//s
+    if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] == 'E')
     {
-        if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
+        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);
+    }
+    else if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] == '0')
+    {
+        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);
+    }
+}
+
+void draw_current(struct key_arg *key_param, int act)
+{
+    if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
+    {
+        key_param->map_param->gather++;
+        (*(key_param->map))[key_param->current_i][key_param->current_j] = '0';
+        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->current_j * 32, key_param->current_i * 32);
+        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
+    }
+    else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
+    {
+        if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면
         {
-            key_param->map_param->gather++;
-            printf("collection : %d gather : %d", key_param->map_param->collect, key_param->map_param->gather);
-            //이전 것이 exit이 아니면 이전 것 검은색으로.
-            //이전 것이 exit이고 수집품 다 모으면 종료인데 이는 밑에서 고려. 수집품 다 못모으면 그냥 검은색으로 안덮으면 됨
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면 exit
-                exit(0);
+            exit(0);
         }
         else
         {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
+            mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
         }
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[2], key_param->current_j * 32, key_param->current_i * 32);//가로 세로 순서
+    }
+    else//'0'일 때
+    {
+        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
+    }
+}
+
+void print_tile_move(struct key_arg *key_param)
+{
+    if (key_param->current_i > key_param->prev_i)//s
+    {
+        draw_prev(key_param);
+        draw_current(key_param, 2);
     }
     else if (key_param->current_i < key_param->prev_i)//w
     {
-        if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
-        {
-            key_param->map_param->gather++;
-            printf("collection : %d gather : %d", key_param->map_param->collect, key_param->map_param->gather);
-            //이전 것이 exit이 아니면 이전 것 검은색으로.
-            //이전 것이 exit이고 수집품 다 모으면 종료인데 이는 밑에서 고려. 수집품 다 못모으면 그냥 검은색으로 안덮으면 됨
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면 exit
-                exit(0);
-        }
-        else
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[3], key_param->current_j * 32, key_param->current_i * 32);//가로 세로 순서
+        draw_prev(key_param);
+        draw_current(key_param, 3);
     }
     else if (key_param->current_j > key_param->prev_j)//d
     {
-        if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
-        {
-            key_param->map_param->gather++;
-            printf("collection : %d gather : %d", key_param->map_param->collect, key_param->map_param->gather);
-            //이전 것이 exit이 아니면 이전 것 검은색으로.
-            //이전 것이 exit이고 수집품 다 모으면 종료인데 이는 밑에서 고려. 수집품 다 못모으면 그냥 검은색으로 안덮으면 됨
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면 exit
-                exit(0);
-        }
-        else
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[1], key_param->current_j * 32, key_param->current_i * 32);//가로 세로 순서
+        draw_prev(key_param);
+        draw_current(key_param, 1);
     }
     else if (key_param->current_j < key_param->prev_j)//a
     {
-        if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
-        {
-            key_param->map_param->gather++;
-            printf("collection : %d gather : %d", key_param->map_param->collect, key_param->map_param->gather);
-            //이전 것이 exit이 아니면 이전 것 검은색으로.
-            //이전 것이 exit이고 수집품 다 모으면 종료인데 이는 밑에서 고려. 수집품 다 못모으면 그냥 검은색으로 안덮으면 됨
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면 exit
-                exit(0);
-        }
-        else
-        {
-            if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] != 'E')
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-            else
-                mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);//가로 세로 순서
-        }
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[0], key_param->current_j * 32, key_param->current_i * 32);//가로 세로 순서
+        draw_prev(key_param);
+        draw_current(key_param, 0);
     }
-    //mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[key_param->imgindex], key_param->current_j * 32, key_param->current_i * 32);//가로 세로 순서
 }
 
 int key_press(int keycode, struct key_arg *key_param)
@@ -236,6 +166,7 @@ void show_window(struct map_arg *m, char **map)
     key_param.map = &map;
     key_param.map_param = m;
     print_tile(m, map, draw, key_param.imgindex);
+    (*key_param.map)[key_param.current_i][key_param.current_j] = '0';
     mlx_hook(draw.win, X_EVENT_KEY_PRESS, 0, &key_press, &key_param);
     mlx_loop(draw.mlx);
 }
