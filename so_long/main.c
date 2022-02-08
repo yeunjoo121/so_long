@@ -77,8 +77,8 @@ void map_parsing(int fd, char ***map)//이차원배열의 주소 전달
 void map_arg_first_init(struct map_arg *m)
 {
     m->collect = 0;
-    m->current_x = 0;
-    m->current_y = 0;
+    m->current_i = 0;
+    m->current_j = 0;
     m->exit = 0;
     m->gather = 0;
     m->length = 0;
@@ -107,6 +107,7 @@ int main(int argc, char **argv)
         }
     }
     is_valid_map(map, &m);
+    printf("\n%d %d\n", m.current_i, m.current_j);
     show_window(&m, map);
     return (0);
 }

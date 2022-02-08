@@ -12,30 +12,58 @@
 #  define OPEN_MAX 32
 # endif
 
+#define X_EVENT_KEY_PRESS		2
+#define X_EVENT_KEY_release		3
+#define X_EVENT_KEY_EXIT		17 //exit key code
+
+//Mac key code example
+//All the key code example other than below is described on the site linked in READEME.md
+#define KEY_ESC			53
+# define KEY_Q			12
+# define KEY_W			13
+# define KEY_E			14
+# define KEY_R			15
+# define KEY_A			0
+# define KEY_S			1
+# define KEY_D			2
+
 #include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
 #include "./mlx/mlx.h"
 
+struct draw_arg
+{
+    void *mlx;
+    void *win;
+    void *wall[5];
+    void *collection[5];
+    void *player[4];
+    void *exit;
+    void *black;
+};
+
 struct map_arg
 {
     int collect;
     int gather;
-    int current_x;
-    int current_y;
+    int current_i;
+    int current_j;
     int width;
     int length;
     int exit;
 };
 
-struct draw_arg
+struct key_arg
 {
-    void *mlx;
-    void *win;
-    void *wall;
-    void *collection;
-    void *player;
-    void *exit;
+    char ***map;
+    struct draw_arg *draw;
+    struct map_arg *map_param;
+    int imgindex;
+    int current_i;
+    int current_j;
+    int prev_i;
+    int prev_j;
 };
 
 int     get_next_line(int fd, char **line);

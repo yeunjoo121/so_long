@@ -46,8 +46,8 @@ void map_arg_init(int i, int j, char **map, struct map_arg *m, int *playerflag)
     {
         if ((*playerflag) == 1)
             so_long_error(6);
-        m->current_x = i;
-        m->current_y = j;
+        m->current_i = i;
+        m->current_j = j;
         (*playerflag) = 1;
     }
     else if (map[i][j] == 'E')
