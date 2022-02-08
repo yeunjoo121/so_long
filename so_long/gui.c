@@ -144,6 +144,12 @@ int key_press(int keycode, struct key_arg *key_param)
     return (0);
 }
 
+int xkey_clicked()
+{
+    exit(0);
+    return (0);
+}
+
 void show_window(struct map_arg *m, char **map)
 {
     struct key_arg key_param;
@@ -171,5 +177,6 @@ void show_window(struct map_arg *m, char **map)
     print_tile(m, map, draw, key_param.imgindex);
     (*key_param.map)[key_param.current_i][key_param.current_j] = '0';
     mlx_hook(draw.win, X_EVENT_KEY_PRESS, 0, &key_press, &key_param);
+    mlx_hook(draw.win, X_EVENT_KEY_EXIT, 0, &xkey_clicked, 0);
     mlx_loop(draw.mlx);
 }
