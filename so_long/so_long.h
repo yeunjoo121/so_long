@@ -83,6 +83,8 @@ void so_long_error(int errorcode);
 void is_valid_map(char **map, struct map_arg *m);
 int is_valid_argv(int argc, char **argv);
 void map_parsing(int fd, char ***map);
+void    ft_putchar_fd(char c, int fd);
+void    ft_putnbr_fd(int n, int fd);
 
 //gui.c
 void show_window(struct map_arg *m, char **map);

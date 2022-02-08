@@ -49,6 +49,9 @@ void draw_current(struct key_arg *key_param, int act)
     if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
     {
         key_param->map_param->gather++;
+        write(1, "collect : ", 11);
+        ft_putnbr_fd(key_param->map_param->gather, 1);
+        write(1, "\n", 2);
         (*(key_param->map))[key_param->current_i][key_param->current_j] = '0';
         mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->current_j * 32, key_param->current_i * 32);
         mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);

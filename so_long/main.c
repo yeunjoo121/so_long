@@ -98,16 +98,7 @@ int main(int argc, char **argv)
     if (fd < 0)//파일 찾지 못함
         so_long_error(2);
     map_parsing(fd, &map);
-    {
-        int i = 0;
-        while(map[i])
-        {
-            printf("%s\n", map[i]);
-            i++;
-        }
-    }
     is_valid_map(map, &m);
-    printf("\n%d %d\n", m.current_i, m.current_j);
     show_window(&m, map);
     return (0);
 }
