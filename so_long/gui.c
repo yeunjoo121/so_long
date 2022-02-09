@@ -1,30 +1,43 @@
-#include "so_long.h"
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   gui.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yeonjkim <yeonjkim@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/09 15:10:31 by yeonjkim          #+#    #+#             */
+/*   Updated: 2022/02/09 21:09:09 by yeonjkim         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void key_arg_init(struct key_arg *key_param, struct map_arg *m)
+#include "so_long.h"
+
+void key_arg_init(struct key_arg *key, struct map_arg *m)
 {
-    key_param->current_i = m->current_i;
-    key_param->current_j = m->current_j;
-    key_param->prev_i = m->current_i;
-    key_param->prev_j = m->current_j;
+    key->current_i = m->current_i;
+    key->current_j = m->current_j;
+    key->prev_i = m->current_i;
+    key->prev_j = m->current_j;
 }
 
-void print_tile(struct map_arg *m, char **map, struct draw_arg draw, int imgindex)
+void print_tile(struct map_arg *m, char **map, struct draw_arg draw, int index)
 {
-    int i = 0;
-    int j = 0;
+    int i;
+    int j;
+
+    i = 0;
     while (i < m->length)
     {
         j = 0;
         while (j < m->width)
         {
-            if (map[i][j] == '1')//벽
-                mlx_put_image_to_window(draw.mlx, draw.win, draw.wall[imgindex], j * 32, i * 32);//가로 세로 순서
-            else if (map[i][j] == 'P')//플레이어
+            if (map[i][j] == '1')
+                mlx_put_image_to_window(draw.mlx, draw.win, draw.wall[index], j * 32, i * 32);//가로 세로 순서
+            else if (map[i][j] == 'P')
                 mlx_put_image_to_window(draw.mlx, draw.win, draw.player[1], j * 32, i * 32);//가로 세로 순서
-            else if (map[i][j] == 'C')//수집품
-                mlx_put_image_to_window(draw.mlx, draw.win, draw.collection[imgindex], j * 32, i * 32);//가로 세로 순서
-            else if (map[i][j] == 'E')//출구
+            else if (map[i][j] == 'C')
+                mlx_put_image_to_window(draw.mlx, draw.win, draw.collection[index], j * 32, i * 32);//가로 세로 순서
+            else if (map[i][j] == 'E')
                 mlx_put_image_to_window(draw.mlx, draw.win, draw.exit, j * 32, i * 32);//가로 세로 순서
             j++;
         }
@@ -32,111 +45,114 @@ void print_tile(struct map_arg *m, char **map, struct draw_arg draw, int imginde
     }
 }
 
-void draw_prev(struct key_arg *key_param)
+void draw_prev(struct key_arg *key)
 {
-    if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] == 'E')
+    void *mlx = key->draw->mlx;
+    void *win = key->draw->win;
+    
+    if ((*(key->map))[key->prev_i][key->prev_j] == 'E')
     {
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->exit, key_param->prev_j * 32, key_param->prev_i * 32);
+        mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+        key->draw->exit, key->prev_j * 32, key->prev_i * 32);
     }
-    else if ((*(key_param->map))[key_param->prev_i][key_param->prev_j] == '0')
+    else if ((*(key->map))[key->prev_i][key->prev_j] == '0')
     {
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->prev_j * 32, key_param->prev_i * 32);
+        mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+        key->draw->black, key->prev_j * 32, key->prev_i * 32);
     }
 }
 
-void draw_current(struct key_arg *key_param, int act)
+void draw_current(struct key_arg *key, int act)
 {
-    if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'C')
+    if ((*(key->map))[key->current_i][key->current_j] == 'C')
     {
-        key_param->map_param->gather++;
+        key->map_param->gather++;
         write(1, "collect : ", 11);
-        ft_putnbr_fd(key_param->map_param->gather, 1);
+        ft_putnbr_fd(key->map_param->gather, 1);
         write(1, "\n", 2);
-        (*(key_param->map))[key_param->current_i][key_param->current_j] = '0';
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->black, key_param->current_j * 32, key_param->current_i * 32);
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
+        (*(key->map))[key->current_i][key->current_j] = '0';
+        mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+        key->draw->black, key->current_j * 32, key->current_i * 32);
+        mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+        key->draw->player[act], key->current_j * 32, key->current_i * 32);
     }
-    else if ((*(key_param->map))[key_param->current_i][key_param->current_j] == 'E')
+    else if ((*(key->map))[key->current_i][key->current_j] == 'E')
     {
-        if (key_param->map_param->gather == key_param->map_param->collect)//다 모았으면
-        {
+        if (key->map_param->gather == key->map_param->collect)//다 모았으면
             exit(0);
-        }
         else
-        {
-            mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
-        }
+            mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+            key->draw->player[act], key->current_j * 32, key->current_i * 32);
     }
-    else//'0'일 때
-    {
-        mlx_put_image_to_window(key_param->draw->mlx, key_param->draw->win, key_param->draw->player[act], key_param->current_j * 32, key_param->current_i * 32);
-    }
+    else
+        mlx_put_image_to_window(key->draw->mlx, key->draw->win, 
+        key->draw->player[act], key->current_j * 32, key->current_i * 32);
 }
 
-void print_tile_move(struct key_arg *key_param)
+void print_tile_move(struct key_arg *key)
 {
-    if (key_param->current_i > key_param->prev_i)//s
+    if (key->current_i > key->prev_i)//s
     {
-        draw_prev(key_param);
-        draw_current(key_param, 2);
+        draw_prev(key);
+        draw_current(key, 2);
     }
-    else if (key_param->current_i < key_param->prev_i)//w
+    else if (key->current_i < key->prev_i)//w
     {
-        draw_prev(key_param);
-        draw_current(key_param, 3);
+        draw_prev(key);
+        draw_current(key, 3);
     }
-    else if (key_param->current_j > key_param->prev_j)//d
+    else if (key->current_j > key->prev_j)//d
     {
-        draw_prev(key_param);
-        draw_current(key_param, 1);
+        draw_prev(key);
+        draw_current(key, 1);
     }
-    else if (key_param->current_j < key_param->prev_j)//a
+    else if (key->current_j < key->prev_j)//a
     {
-        draw_prev(key_param);
-        draw_current(key_param, 0);
+        draw_prev(key);
+        draw_current(key, 0);
     }
 }
 
-int key_press(int keycode, struct key_arg *key_param)
+int key_press(int keycode, struct key_arg *key)
 {
     if (keycode == KEY_W)
     {
-        if (key_param->current_i - 1 >= 0 && (*(key_param->map))[key_param->current_i - 1][key_param->current_j] != '1')
+        if (key->current_i - 1 >= 0 && (*(key->map))[key->current_i - 1][key->current_j] != '1')
         {
-            key_param->prev_i = key_param->current_i;
-            key_param->prev_j = key_param->current_j;
-            key_param->current_i = key_param->current_i - 1;
-            print_tile_move(key_param);
+            key->prev_i = key->current_i;
+            key->prev_j = key->current_j;
+            key->current_i = key->current_i - 1;
+            print_tile_move(key);
         }
     }
     if (keycode == KEY_D)
     {
-        if (key_param->current_j + 1 <= key_param->map_param->width && (*(key_param->map))[key_param->current_i][key_param->current_j + 1] != '1')
+        if (key->current_j + 1 <= key->map_param->width && (*(key->map))[key->current_i][key->current_j + 1] != '1')
         {
-            key_param->prev_i = key_param->current_i;
-            key_param->prev_j = key_param->current_j;
-            key_param->current_j = key_param->current_j + 1;
-            print_tile_move(key_param);
+            key->prev_i = key->current_i;
+            key->prev_j = key->current_j;
+            key->current_j = key->current_j + 1;
+            print_tile_move(key);
         }
     }
     if (keycode == KEY_A)
     {
-        if (key_param->current_j - 1 >= 0 && (*(key_param->map))[key_param->current_i][key_param->current_j - 1] != '1')
+        if (key->current_j - 1 >= 0 && (*(key->map))[key->current_i][key->current_j - 1] != '1')
         {
-            key_param->prev_i = key_param->current_i;
-            key_param->prev_j = key_param->current_j;
-            key_param->current_j = key_param->current_j - 1;
-            print_tile_move(key_param);
+            key->prev_i = key->current_i;
+            key->prev_j = key->current_j;
+            key->current_j = key->current_j - 1;
+            print_tile_move(key);
         }
     }
     if (keycode == KEY_S)
     {
-        if (key_param->current_i + 1 <= key_param->map_param->length && (*(key_param->map))[key_param->current_i + 1][key_param->current_j] != '1')
+        if (key->current_i + 1 <= key->map_param->length && (*(key->map))[key->current_i + 1][key->current_j] != '1')
         {
-            key_param->prev_i = key_param->current_i;
-            key_param->prev_j = key_param->current_j;
-            key_param->current_i = key_param->current_i + 1;
-            print_tile_move(key_param);
+            key->prev_i = key->current_i;
+            key->prev_j = key->current_j;
+            key->current_i = key->current_i + 1;
+            print_tile_move(key);
         }
     }
     else if (keycode == KEY_ESC)
