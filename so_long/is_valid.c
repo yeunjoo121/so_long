@@ -6,13 +6,13 @@
 /*   By: yeonjkim <yeonjkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 15:10:22 by yeonjkim          #+#    #+#             */
-/*   Updated: 2022/02/09 15:10:23 by yeonjkim         ###   ########.fr       */
+/*   Updated: 2022/02/09 23:34:35 by yeonjkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	is_valid_map(char **map, struct map_arg *m)
+void	is_valid_map(char **map, t_map_arg *m)
 {
 	is_rectangle(map, m);
 	is_all_valid_char(map, m->width, m->length, m);

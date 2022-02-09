@@ -6,13 +6,13 @@
 /*   By: yeonjkim <yeonjkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/09 21:41:06 by yeonjkim          #+#    #+#             */
-/*   Updated: 2022/02/09 22:05:03 by yeonjkim         ###   ########.fr       */
+/*   Updated: 2022/02/09 23:33:41 by yeonjkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	print_tile(struct map_arg *m, char **map, struct draw_arg draw, int ind)
+void	print_tile(t_map_arg *m, char **map, t_draw_arg draw, int ind)
 {
 	int	i;
 	int	j;
@@ -41,7 +41,7 @@ void	print_tile(struct map_arg *m, char **map, struct draw_arg draw, int ind)
 	}
 }
 
-void	draw_prev(struct key_arg *key, int i, int j)
+void	draw_prev(t_key_arg *key, int i, int j)
 {
 	void	*mlx;
 	void	*win;
@@ -60,7 +60,7 @@ void	draw_prev(struct key_arg *key, int i, int j)
 	}
 }
 
-void	draw_current(struct key_arg *key, int act, int i, int j)
+void	draw_current(t_key_arg *key, int act, int i, int j)
 {
 	if ((*(key->map))[i][j] == 'C')
 	{
@@ -87,7 +87,7 @@ void	draw_current(struct key_arg *key, int act, int i, int j)
 			key->draw->player[act], j * 32, i * 32);
 }
 
-void	print_tile_move(struct key_arg *key)
+void	print_tile_move(t_key_arg *key)
 {
 	if (key->current_i > key->prev_i)
 	{

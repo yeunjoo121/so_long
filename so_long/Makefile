@@ -1,3 +1,15 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: yeonjkim <yeonjkim@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/02/09 22:20:05 by yeonjkim          #+#    #+#              #
+#    Updated: 2022/02/09 22:56:43 by yeonjkim         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 NAME    =   a.out
 #
 # SRCS and OBJS
@@ -9,7 +21,7 @@ OBJS = $(SRCS:%.c=%.o)
 # Compiler and flags
 #
 CC      =   clang
-//CFLAGS    =   -Wall -Werror -Wextra
+CFLAGS    =   -Wall -Werror -Wextra
 CLIB    =   -Lmlx -lmlx -framework OpenGL -framework Appkit -Imlx
 #
 # Rules
