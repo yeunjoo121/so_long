@@ -6,7 +6,7 @@
 #    By: yeonjkim <yeonjkim@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 22:20:05 by yeonjkim          #+#    #+#              #
-#    Updated: 2022/02/09 22:56:43 by yeonjkim         ###   ########.fr        #
+#    Updated: 2022/02/10 17:32:05 by yeonjkim         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME    =   a.out
 #
 # SRCS and OBJS
 #
-SRCS    =   $(wildcard *.c) \
+SRCS    =   get_next_line_utils.c get_next_line.c is_valid.c is_valid_map.c key_pressed.c draw.c gui.c so_long_utils.c split_utils.c main.c
 
 OBJS = $(SRCS:%.c=%.o)
 #
